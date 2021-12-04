@@ -1,52 +1,44 @@
-def проверка_числа():
+def checkint():
     try:
-        int(число.get())
+        int(ent_int.get())
         return True
     except ValueError:
         messagebox.showinfo('Fatal ERROR', 'Число?')
-        кнопка_повтора.pack(expand=True, fill=BOTH)
+        btn_restart.pack(expand=True, fill=BOTH)
 
-
-def ок():
-    пояснение.pack_forget()
-    сбор_вводных_данных.pack_forget()
-    кнопка_ок.pack_forget()
-    if валюта.get() == "RUB":
-        проверка_числа()
-        преобразование = int(число.get()) * 0.014
-        преобразование = str(число.get()) + " RUB = " + str(преобразование) + " USD"
-        вывод = Label(window, bg="black", fg="white", text=преобразование)
-        вывод.pack()
+def ok():
+    frm_entry.pack_forget()
+    if combo.get() == "RUB":
+        checkint()
+        calc = int(ent_int.get()) * 0.014
+        string = str(ent_int.get()) + " RUB = " + str(calc) + " USD"
+        lbl = Label(window, bg="black", fg="white", text=string)
+        lbl.pack()
         fail = open('История конвертера валют.txt', 'a')
-        fail.write("\n" + now.strftime("%d.%m.%Y %H:%M") + " : " + преобразование)
+        fail.write("\n" + now.strftime("%d.%m.%Y %H:%M") + " : " + string)
         fail.close()
 
-    elif валюта.get() == "USD":
-        проверка_числа()
-        преобразование = int(число.get()) / 0.014
-        преобразование = str(число.get()) + " USD = " + str(преобразование) + " RUB"
-        вывод = Label(window, bg="black", fg="white", text=преобразование)
-        вывод.pack()
+    elif combo.get() == "USD":
+        checkint()
+        calc = int(ent_int.get()) / 0.014
+        string = str(ent_int.get()) + " USD = " + str(calc) + " RUB"
+        lbl = Label(window, bg="black", fg="white", text=string)
+        lbl.pack()
         fail = open('История конвертера валют.txt', 'a')
-        fail.write("\n" + now.strftime("%d.%m.%Y %H:%M") + " : " + преобразование)
+        fail.write("\n" + now.strftime("%d.%m.%Y %H:%M") + " : " + string)
         fail.close()
 
     else:
         messagebox.showinfo('Fatal ERROR', 'А валюту выбрать?')
-    кнопка_повтора.pack(expand=True, fill=BOTH)
+    btn_restart.pack(expand=True, fill=BOTH)
 
+def eade():
+    btn_restart.pack_forget()
+    frm_entry.pack()
 
-def пис():
-    кнопка_повтора.pack_forget()
-    пояснение.pack(fill=X)
-    сбор_вводных_данных.pack()
-    кнопка_ок.pack(fill=X)
-
-
-def начать():
-    первоначальная_кнопка.destroy()
-    пис()
-
+def start():
+    btn_start.destroy()
+    eade()
 
 from tkinter import *
 from tkinter.ttk import Combobox
@@ -60,28 +52,27 @@ window["bg"] = "black"
 window.title("Конвентер рублей в доллары и назад.")
 window.attributes('-fullscreen', True)
 
-закрыть = Label(window, bg="black", fg="white", text="Чтобы закрыть окно нажите Alt+F4.")
-закрыть.pack()
-тд = Label(window, bg="black", fg="white", text="Текущая дата и время:")
-тд.pack()
-дмгчм = Label(window, bg="black", fg="white", text=now.strftime("%d-%m-%Y %H:%M"))
-дмгчм.pack()
+lbl_close = Label(window, bg="black", fg="white", text="Чтобы закрыть окно нажите Alt+F4.")
+lbl_close.pack()
+lbl_nst = Label(window, bg="black", fg="white", text="Текущая дата и время:\n" + now.strftime("%d-%m-%Y %H:%M"))
+lbl_nst.pack()
 
-первоначальная_кнопка = Button(master=window, bg="black", fg="white", text="Начать", command=начать)
-первоначальная_кнопка.pack(expand=True, fill=BOTH)
+btn_start = Button(master=window, bg="black", fg="white", text="Начать", command=start)
+btn_start.pack(expand=True, fill=BOTH)
 
-пояснение = Label(window, bg="black", fg="white", text="Введите необходиое число, выберите валюту и нажмите ОК.")
-пояснение.pack_forget()
-сбор_вводных_данных = Frame(relief=SUNKEN, bg="black", borderwidth=3)
-сбор_вводных_данных.pack_forget()
-число = Entry(master=сбор_вводных_данных, bg="grey", fg="white", width=8)
-число.grid(column=0, row=1)
-валюта = Combobox(master=сбор_вводных_данных, background="grey", foreground="white", width=7)
-валюта['values'] = ("RUB", "USD")
-валюта.grid(column=1, row=1)
-кнопка_ок = Button(master=window, bg="black", fg="white", text="ОК", command=ок)
-кнопка_ок.pack_forget()
-кнопка_повтора = Button(master=window, bg="black", fg="white", text="Ещё раз", command=пис)
-кнопка_повтора.pack_forget()
+frm_entry = Frame(relief=SUNKEN, bg="black", borderwidth=3)
+frm_entry.pack_forget()
+lbl_annotation = Label(master=frm_entry, bg="black", fg="white", text="Введите необходиое число,\nвыберите валюту и нажмите ОК.")
+lbl_annotation.grid(column=0, row=1)
+ent_int = Entry(master=frm_entry, bg="grey", fg="white", width=8)
+ent_int.grid(column=0, row=2)
+combo = Combobox(master=frm_entry, background="grey", foreground="white", width=7)
+combo['values'] = ("RUB", "USD")
+combo.grid(column=1, row=2)
+btn_next = Button(master=frm_entry, bg="black", fg="white", text="ОК", command=ok)
+btn_next.grid(column=0, row=3)
+
+btn_restart = Button(master=window, bg="black", fg="white", text="Ещё раз", command=eade)
+btn_restart.pack_forget()
 
 window.mainloop()
